@@ -1,0 +1,55 @@
+# Nom du workflow (ce qui s'affiche dans l'onglet Actions de GitHub)
+name: Build Joypadmapper APK
+
+# Déclencheurs : ici, on compile soit quand on pousse sur main, soit à la demande
+on:
+  push:
+    branches:
+      - main      # Déclenche si on fait un commit sur la branche main
+  workflow_dispatch:  # Permet de lancer le workflow manuellement
+
+jobs:
+  build:  # Nom du job
+    runs-on: ubuntu-latest  # Machine virtuelle Ubuntu fournie par GitHub
+
+    steps:  # Liste des étapes à exécuter
+
+      # 1️⃣ Récupération du code source depuis TON fork
+      - name: Cloner le dépôt
+        uses: actions/checkout@v3
+        # actions/checkout est officiel, maintenu par GitHub
+        # Il télécharge le contenu du repo pour que les étapes suivantes y aient accès
+
+      # 2️⃣ Installation de Java (JDK) nécessaire pour compiler un projet Android
+      - name: Installer Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'  # Distribution OpenJDK recommandée
+          java-version: '17'       # Version demandée par Gradle/Android Studio
+
+      # 3️⃣ Mise en cache des dépendances Gradle pour accélérer les compilations
+      - name: Mettre en cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: gradle-
+
+      # 4️⃣ Donner les droits d'exécution à gradlew (script de build)
+      - name: Rendre gradlew exécutable
+        run: chmod +x ./gradlew
+        # "run" exécute une commande shell directement dans la VM
+
+      # 5️⃣ Compiler le projet en APK debug
+      - name: Compiler l’APK Debug
+        run: ./gradlew assembleDebug
+        # assembleDebug est une tâche Gradle standard pour Android
+        # Elle génère un APK non signé (mode debug)
+
+      # 6️⃣ Sauvegarder l’APK généré comme artefact téléchargeable
+      - name: Sauvegarder l’APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: joypadmapper-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          # Ce chemin dépend de la structure du projet
