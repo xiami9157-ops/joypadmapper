@@ -19,11 +19,11 @@ jobs:
         # Action officielle pour télécharger le contenu du repo
 
       # 2️⃣ Installer Java 11 (compatibilité avec anciens projets Android)
-      - name: Installer Java 11
+      - name: Installer Java 7
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'  # OpenJDK
-          java-version: '11'       # Évite le bug avec les vieilles versions de Gradle
+          java-version: '7'       # Évite le bug avec les vieilles versions de Gradle
 
       # 3️⃣ Mise en cache des dépendances Gradle
       - name: Mettre en cache Gradle
