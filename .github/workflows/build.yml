@@ -19,7 +19,11 @@ jobs:
         uses: actions/checkout@v3
         # actions/checkout est officiel, maintenu par GitHub
         # Il télécharge le contenu du repo pour que les étapes suivantes y aient accès
-
+        
+      # 1️⃣ bis Controle du repo
+      - name: Controller le dépôt
+        run: ls -R
+        
       # 2️⃣ Installation de Java (JDK) nécessaire pour compiler un projet Android
       - name: Installer Java 17
         uses: actions/setup-java@v3
@@ -42,7 +46,7 @@ jobs:
 
       # 5️⃣ Compiler le projet en APK debug
       - name: Compiler l’APK Debug
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --info
         # assembleDebug est une tâche Gradle standard pour Android
         # Elle génère un APK non signé (mode debug)
 
