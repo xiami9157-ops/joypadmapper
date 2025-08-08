@@ -46,7 +46,7 @@ jobs:
 
       # 5️⃣ Compiler le projet en APK debug
       - name: Compiler l’APK Debug
-        run: ./gradlew assembleDebug --info
+        run: ./gradlew assembleDebug --scan
         # assembleDebug est une tâche Gradle standard pour Android
         # Elle génère un APK non signé (mode debug)
 
